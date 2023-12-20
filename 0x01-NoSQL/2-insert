@@ -1,2 +1,2 @@
 // Insert an element in the database
-db.school.insert({"name" : "Holberton School"})
+db.school.insert({"name" : "Holberton school"})
