@@ -21,9 +21,9 @@ def call_history(method: Callable) -> Callable:
     @functools.wraps(method)
     def add_to_history(self, *args, **kwargs):
         """ Adds to the list a new input and output """
-        self._redis.rpush(method.__qualname__ + ":input", str(args))
+        self._redis.rpush(method.__qualname__ + ":inputs", str(args))
         output = method(self, *args, **kwargs)
-        self._redis.rpush(method.__qualname__ + ":output", str(output))
+        self._redis.rpush(method.__qualname__ + ":outputs", str(output))
         return output
 
     return add_to_history
