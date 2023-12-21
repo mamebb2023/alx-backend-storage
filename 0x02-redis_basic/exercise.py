@@ -16,6 +16,18 @@ def count_calls(method: Callable) -> Callable:
 
     return increament
 
+def call_history(method: Callable) -> Callable:
+    """ Stores input and output when a function is called """
+    @functools.wraps(method)
+    def add_to_history(self, *args):
+        """ Adds to the list a new input and output """
+        self._redis.rpush(method.__qualname__ + ":input", str(args))
+        output = method(self, *args, **kwargs)
+        self._redis.rpush(method.__qualname__ + ":output", str(output))
+        return output
+
+    return add_to_history
+
 class Cache:
     def __init__(self) -> None:
         """ Init Radis """
@@ -23,6 +35,7 @@ class Cache:
         self._redis.flushdb()
 
     @count_calls
+    @call_history
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """ Stores a data with a random key """
         random_key = str(uuid4())
