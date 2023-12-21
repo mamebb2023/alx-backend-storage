@@ -5,13 +5,13 @@ Main file
 import redis
 
 Cache = __import__('exercise').Cache
+replay = __import__('exercise').replay
 
 cache = Cache()
 
-data = b"hello"
-key = cache.store(data)
-print(key)
+cache.store("data")
+cache.store("foo")
+cache.store(43)
+cache.store("cold")
 
-local_redis = redis.Redis()
-print(local_redis.get(key))
-
+replay(cache.store)

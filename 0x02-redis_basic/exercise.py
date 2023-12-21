@@ -28,6 +28,18 @@ def call_history(method: Callable) -> Callable:
 
     return add_to_history
 
+def replay(method: Callable) -> None:
+    """ Prints a report on a specific function """
+    r = redis.Redis()
+    inputs = r.lrange(method.__qualname__ + ":inputs", 0, -1)
+    outputs = r.lrange(method.__qualname__ + ":output", 0, -1)
+
+    print(f"{method.__qualname__} was called {len(inputs)} times:")
+    for input, output in zip(inputs, outputs):
+        print("{}(*{}) -> {}".format(method.__qualname__,
+              input.decode("utf-8"), output.decode("utf-8")))
+
+
 class Cache:
     def __init__(self) -> None:
         """ Init Radis """
