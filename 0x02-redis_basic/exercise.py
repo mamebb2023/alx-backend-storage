@@ -19,7 +19,7 @@ def count_calls(method: Callable) -> Callable:
 def call_history(method: Callable) -> Callable:
     """ Stores input and output when a function is called """
     @functools.wraps(method)
-    def add_to_history(self, *args):
+    def add_to_history(self, *args, **kwargs):
         """ Adds to the list a new input and output """
         self._redis.rpush(method.__qualname__ + ":input", str(args))
         output = method(self, *args, **kwargs)
